@@ -7,6 +7,22 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+interface Result {
+  index: number;
+  drink: number;
+  detail: {
+    name: string;
+    base: number;
+    main: number[];
+    sub: number[];
+    garnish: number;
+    glass: number;
+    title: string;
+    comment: string;
+  };
+}
+[];
+
 export const AppDataSource = new DataSource({
   type: 'postgres',
   host: process.env.DATABASE_HOST,
