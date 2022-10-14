@@ -38,10 +38,6 @@ app.get('/', async (req: Request, res: Response) => {
   res.send(200);
 });
 
-app.post('/upload', upload.single('image'), async (req, res) => {
-  res.send({ url: (req.file as any).location });
-});
-
 const PORT = 4000;
 
 try {
