@@ -4,6 +4,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { DataSource } from 'typeorm';
 import dotenv from 'dotenv';
+import { Game } from './entities/game';
 
 dotenv.config();
 
@@ -48,6 +49,19 @@ const app: Application = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.post('/new',async (req:Request, res: Response) => {
+  const result : object[] = [];
+  const game = await AppDataSource.getRepository(Game).create({ 
+    name: req.body.name,
+    background: req.body.background,
+    showcase: req.body.showcase,
+    result: JSON.stringify(result)
+   });
+  const gameResult = await AppDataSource.getRepository(Game).save(game);
+   
+  return res.send(gameResult);
+})
 
 app.get('/', async (req: Request, res: Response) => {
   res.send(200);
