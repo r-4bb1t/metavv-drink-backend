@@ -56,10 +56,6 @@ app.post('/upload', upload.single('image'), async (req, res) => {
   res.send({ url: (req.file as any).location });
 });
 
-app.post('/new', )
-
-const PORT = 4000;
-
 try {
   app.listen(PORT, (): void => {
     console.log(`Connected successfully on port ${PORT}`);
