@@ -42,34 +42,27 @@ app.get('/', async (req: Request, res: Response) => {
 app.post('/game/:gameId', async (req: Request, res: Response) => {
   try {
     const game = await AppDataSource.getRepository(Game)
-      .createQueryBuilder('index')
+      .createQueryBuilder('game')
       .where('game.id == :id', { id: req.params.gameId })
       .getOne();
 
     const result = JSON.parse(game!.result);
-    let idx = 0;
+    const idx = result.length;
 
-    if (result[result.length - 1].index == 0) {
-      idx = 0;
-    } else {
-      idx = result[result.length - 1].index;
-    }
-
-    const q = await AppDataSource.getRepository(Game).create({
-      result: result.map((detail: any) => {
-        return {
-          index: idx + 1,
-          name: detail.name,
-          base: detail.base,
-          main: detail.main,
-          sub: detail.sub,
-          garnish: detail.garnish,
-          glass: detail.glass,
-          title: detail.title,
-          comment: detail.comment,
-        };
-      }),
+    const q = result.map((detail: any) => {
+      return {
+        index: idx + 1,
+        name: detail.name,
+        base: detail.base,
+        main: detail.main,
+        sub: detail.sub,
+        garnish: detail.garnish,
+        glass: detail.glass,
+        title: detail.title,
+        comment: detail.comment,
+      };
     });
+    await AppDataSource.getRepository(Game).update(result, q);
     return res.send(q);
   } catch (e) {
     console.log(e);
