@@ -52,13 +52,40 @@ app.get('/', async (req: Request, res: Response) => {
   res.send(200);
 });
 
+app.get('/:gameId', async (req: Request, res: Response) => {
+  try {
+    const game = await AppDataSource.getRepository(Game)
+      .createQueryBuilder('game')
+      .where('game.id == :id', { id: req.params.gameId })
+      .getOne();
+
+    if (!game) return res.send(404);
+
+    return res.send({
+      name: game.name,
+      background: game.background,
+      showcase: game.showcase,
+      result: JSON.parse(game.result).map((r : any) => {
+        return {
+          name: r.name,
+          base: r.base,
+          main: r.main,
+          sub: r.sub,
+          garnish: r.garnish,
+          glass: r.glass,
+          title: r.title,
+          comment: r.comment,
+        }
+      })
+    });
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 app.post('/upload', upload.single('image'), async (req, res) => {
   res.send({ url: (req.file as any).location });
 });
-
-app.post('/new', )
-
-const PORT = 4000;
 
 try {
   app.listen(PORT, (): void => {
