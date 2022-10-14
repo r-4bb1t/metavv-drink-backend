@@ -21,6 +21,7 @@ export const AppDataSource = new DataSource({
   migrations: ['src/migrations/**/*.ts'],
   subscribers: ['src/subscribers/**/*.subscriber.ts'],
 });
+
 AppDataSource.initialize()
   .then(() => {
     console.log('Data Source has been initialized!');
@@ -51,9 +52,9 @@ app.get('/', async (req: Request, res: Response) => {
   res.send(200);
 });
 
-// app.post('/upload', upload.single('image'), async (req, res) => {
-//   res.send({ url: (req.file as any).location });
-// });
+app.post('/upload', upload.single('image'), async (req, res) => {
+  res.send({ url: (req.file as any).location });
+});
 
 app.post('/new', )
 
