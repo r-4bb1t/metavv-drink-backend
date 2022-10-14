@@ -21,7 +21,6 @@ interface Result {
     comment: string;
   };
 }
-[];
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
