@@ -3,6 +3,7 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { DataSource } from 'typeorm';
+import { Game } from './entities/game';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -38,8 +39,41 @@ app.get('/', async (req: Request, res: Response) => {
   res.send(200);
 });
 
-app.post('/upload', upload.single('image'), async (req, res) => {
-  res.send({ url: (req.file as any).location });
+app.post('/game/:gameId', async (req: Request, res: Response) => {
+  try {
+    const game = await AppDataSource.getRepository(Game)
+      .createQueryBuilder('index')
+      .where('game.id == :id', { id: req.params.gameId })
+      .getOne();
+
+    const result = JSON.parse(game!.result);
+    let idx = 0;
+
+    if (result[result.length - 1].index == 0) {
+      idx = 0;
+    } else {
+      idx = result[result.length - 1].index;
+    }
+
+    const q = await AppDataSource.getRepository(Game).create({
+      result: result.map((detail: any) => {
+        return {
+          index: idx + 1,
+          name: detail.name,
+          base: detail.base,
+          main: detail.main,
+          sub: detail.sub,
+          garnish: detail.garnish,
+          glass: detail.glass,
+          title: detail.title,
+          comment: detail.comment,
+        };
+      }),
+    });
+    return res.send(q);
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 const PORT = 4000;
