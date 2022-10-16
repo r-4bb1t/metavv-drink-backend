@@ -116,7 +116,7 @@ app.get('/:gameId', async (req: Request, res: Response) => {
   try {
     const game = await AppDataSource.getRepository(Game)
       .createQueryBuilder('game')
-      .where('game.id == :id', { id: req.params.gameId })
+      .where('game.id = :id', { id: req.params.gameId })
       .getOne();
 
     if (!game) return res.send(404);
@@ -141,10 +141,6 @@ app.get('/:gameId', async (req: Request, res: Response) => {
   } catch (e) {
     console.log(e);
   }
-});
-
-app.post('/upload', upload.single('image'), async (req, res) => {
-  res.send({ url: (req.file as any).location });
 });
 
 const PORT = 4000;
