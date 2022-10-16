@@ -92,7 +92,9 @@ app.post('/game/:gameId', async (req: Request, res: Response) => {
       ...result,
       {
         index: idx + 1,
+        drink: drinkCode(req.body.main, req.body.sub, req.body.garnish),
         name: req.body.name,
+
         base: req.body.base,
         main: req.body.main,
         sub: req.body.sub,
