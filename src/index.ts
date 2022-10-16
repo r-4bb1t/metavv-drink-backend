@@ -51,21 +51,21 @@ app.post('/game/:gameId', async (req: Request, res: Response) => {
     const result = JSON.parse(game!.result);
     const idx = result.length;
 
-    const q: any[] = [
+    const q = [
       ...result,
       {
-        index = idx + 1,
-        name: result.detail.name,
-        base: result.detail.base,
-        main: result.detail.main,
-        sub: result.detail.sub,
-        garnish: result.detail.garnish,
-        glass: result.detail.glass,
-        title: result.detail.title,
-        comment: result.detail.comment,
+        index: idx + 1,
+        name: req.body.name,
+        base: req.body.base,
+        main: req.body.main,
+        sub: req.body.sub,
+        garnish: req.body.garnish,
+        glass: req.body.glass,
+        title: req.body.title,
+        comment: req.body.comment,
       },
     ];
-    await AppDataSource.getRepository(Game).update(result, q);
+    await AppDataSource.getRepository(Game).update(game.id, { result: JSON.stringify(q) });
     return res.send(q);
   } catch (e) {
     console.log(e);
