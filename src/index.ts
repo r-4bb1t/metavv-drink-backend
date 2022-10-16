@@ -77,6 +77,40 @@ app.get('/:gameId', async (req: Request, res: Response) => {
   }
 });
 
+app.post('/game/:gameId', async (req: Request, res: Response) => {
+  try {
+    const game = await AppDataSource.getRepository(Game)
+      .createQueryBuilder('game')
+      .where('game.id = :id', { id: req.params.gameId })
+      .getOne();
+
+    if (!game) return res.send(404);
+
+    const result = JSON.parse(game!.result);
+    const idx = result.length;
+
+    const q = [
+      ...result,
+      {
+        index: idx + 1,
+        name: req.body.name,
+        base: req.body.base,
+        main: req.body.main,
+        sub: req.body.sub,
+        garnish: req.body.garnish,
+        glass: req.body.glass,
+        title: req.body.title,
+        comment: req.body.comment,
+      },
+    ];
+    await AppDataSource.getRepository(Game).update(game.id, { result: JSON.stringify(q) });
+    return res.send(q);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+
 const PORT = 4000;
 
 try {
