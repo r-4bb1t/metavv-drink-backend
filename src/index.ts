@@ -125,18 +125,7 @@ app.get('/:gameId', async (req: Request, res: Response) => {
       name: game.name,
       background: game.background,
       showcase: game.showcase,
-      result: JSON.parse(game.result).map((r : any) => {
-        return {
-          name: r.name,
-          base: r.base,
-          main: r.main,
-          sub: r.sub,
-          garnish: r.garnish,
-          glass: r.glass,
-          title: r.title,
-          comment: r.comment,
-        }
-      })
+      result: JSON.parse(game.result)
     });
   } catch (e) {
     console.log(e);
