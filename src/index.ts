@@ -70,12 +70,64 @@ app.get('/:gameId', async (req: Request, res: Response) => {
       name: game.name,
       background: game.background,
       showcase: game.showcase,
-      result: JSON.parse(game.result)
+      result: JSON.parse(game.result),
     });
   } catch (e) {
     console.log(e);
   }
 });
+
+app.post('/game/:gameId', async (req: Request, res: Response) => {
+  try {
+    const game = await AppDataSource.getRepository(Game)
+      .createQueryBuilder('game')
+      .where('game.id = :id', { id: req.params.gameId })
+      .getOne();
+
+    if (!game) return res.send(404);
+
+    const result = JSON.parse(game!.result);
+    const idx = result.length;
+
+    const q = [
+      ...result,
+      {
+        index: idx + 1,
+        name: req.body.name,
+        base: req.body.base,
+        main: req.body.main,
+        sub: req.body.sub,
+        garnish: req.body.garnish,
+        glass: req.body.glass,
+        title: req.body.title,
+        comment: req.body.comment,
+      },
+    ];
+    await AppDataSource.getRepository(Game).update(game.id, { result: JSON.stringify(q) });
+    return res.send({ result: drinkCode(req.body.main, req.body.sub, req.body.garnish) });
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+function drinkCode(mainIdxs: number[], subIdxs: number[], garnish: number) {
+  //똑부러짐 뚝딱거림 귀여움 시크함 다정함 무뚝뚝함 투머치토커 과묵함 유잼 노잼 섬세함 둔감함 대식가 소식가 호불호확실 팔랑귀 밖순이 집순이 연애고수 연애고자
+  let cnt1 = 0;
+  let cnt2 = 0;
+
+  const arr = [
+    [30, 30, 20, 20],
+    [30, 30, 20, 20],
+    [130, 130, 120, 120],
+    [130, 130, 120, 120],
+  ];
+  for (let i = 0; i < mainIdxs.length; i++) {
+    cnt1 += (mainIdxs[i] + 1) % 2;
+    cnt2 += (subIdxs[i] + 1) % 2;
+  }
+
+  return arr[cnt1][cnt2] + garnish;
+}
 
 const PORT = 4000;
 
