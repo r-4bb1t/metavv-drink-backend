@@ -57,53 +57,25 @@ app.post('/new', async (req: Request, res: Response) => {
 });
 // game 상수를 만들어 정보를 넣고 result객체를 만들어서 json형식으로 나중에 넣어준다.
 
-// get으로 접근했을 때
-app.get('/:gameId', async function (req: Request, res: Response) {
-  const results = await AppDataSource.getRepository(Game).findOneBy({
-    id: req.params.gameId,
-  });
-  return res.send(results);
-});
-/* 요 부분은 request가 없으니까 없어도 되는거지?
-  const total = await AppDataSource.getRepository(Game).create({
-    gameId : req.body.gameId,
-    result :{
-      index : req.body.index,
-      drink : req.body.drink,
-      detail : {
-        name : req.body.name,
-        base : req.body.base,
-        main : req.body.main,
-        sub : req.body.sub,
-        garnish : req.body.garnish,
-        glass : req.body.glass,
-        title : req.body.title,
-        comment : req.body.comment,
-      },
-    },
-    name : req.body.name,
-    background : req.body.background,
-    showcase : req.body.showcase
-  })
-*/
+app.get('/:gameId', async (req: Request, res: Response) => {
+  try {
+    const game = await AppDataSource.getRepository(Game)
+      .createQueryBuilder('game')
+      .where('game.id = :id', { id: req.params.gameId })
+      .getOne();
 
-/* return res.send({
-    result :{
-      index : game.index,
-      drink : game.drink,
-      detail : {
-        name : game.name,
-        base : game.base,
-        main : game.main,
-        sub : game.sub,
-        garnish : game.garnish,
-        glass : game.glass,
-        title : game.title,
-        comment : game.comment,
-      },
-    },
-  })
-}*/
+    if (!game) return res.send(404);
+
+    return res.send({
+      name: game.name,
+      background: game.background,
+      showcase: game.showcase,
+      result: JSON.parse(game.result)
+    });
+  } catch (e) {
+    console.log(e);
+  }
+});
 
 const PORT = 4000;
 
