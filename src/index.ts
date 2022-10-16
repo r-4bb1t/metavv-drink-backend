@@ -67,7 +67,6 @@ app.get('/', async (req: Request, res: Response) => {
   res.send(200);
 });
 
-<<<<<<< HEAD
 app.get('/:gameId', async (req: Request, res: Response) => {
   try {
     const game = await AppDataSource.getRepository(Game)
@@ -102,9 +101,8 @@ app.get('/:gameId', async (req: Request, res: Response) => {
 app.post('/upload', upload.single('image'), async (req, res) => {
   res.send({ url: (req.file as any).location });
 });
-=======
+
 const PORT = 4000;
->>>>>>> 183185c2895ad5246bc1379264e61efa248fd5ed
 
 try {
   app.listen(PORT, (): void => {
