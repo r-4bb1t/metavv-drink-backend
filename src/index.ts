@@ -5,7 +5,6 @@ import bodyParser from 'body-parser';
 import { DataSource } from 'typeorm';
 import dotenv from 'dotenv';
 import { Game } from './entities/game'; //데이터베이스 가져오기
-import { getMaxListeners } from 'process';
 
 dotenv.config();
 
