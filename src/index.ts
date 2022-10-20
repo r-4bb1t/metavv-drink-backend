@@ -9,13 +9,13 @@ import { Game } from './entities/game'; //데이터베이스 가져오기
 dotenv.config();
 
 export const AppDataSource = new DataSource({
-  type: 'postgres',
+  type: 'mysql',
   host: process.env.DATABASE_HOST,
-  port: 5432,
+  port: 3306,
   username: process.env.DATABASE_USERNAME,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
-  synchronize: true,
+  synchronize: false,
   logging: false,
   entities: ['src/entities/*.ts'],
   migrations: ['src/migrations/**/*.ts'],
